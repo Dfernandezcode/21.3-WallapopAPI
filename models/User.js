@@ -9,8 +9,6 @@ const Schema = mongoose.Schema;
 
 // Creamos esquema del user:
 
-const allowedCountries = ["SPAIN", "COLOMBIA", "ENGLAND", "RUSSIA", "ENGLAND", "UNITED STATES", "ARGENTINA", "CZECHOSLOVAKIA", "UNITED STATES", "JAPAN", "NIGERIA"];
-
 const userSchema = new Schema(
   {
     email: {

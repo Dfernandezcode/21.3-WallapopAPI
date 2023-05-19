@@ -6,7 +6,7 @@ const chatSchema = new Schema(
     buyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +21,7 @@ const chatSchema = new Schema(
     messages: {
       type: mongoose.Schema.Types.Array,
       ref: "Messages",
-      required: true,
+      required: false,
     },
   },
   {
