@@ -13,6 +13,7 @@ const productSchema = new Schema(
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     description: { type: String, trim: true, minLength: [10, "Descripción demasiado corta, mínimo 10 caracteres."], maxLength: [50, " Descripción demasiado larga, máximo 50 caracteres."] },
+    photos: { type: [{ type: String, required: true }], required: false },
   },
   { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
 );
