@@ -66,6 +66,23 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.get("/name/:name", async (req, res, next) => {
+  const name = req.params.name;
+  // Si funciona la lectura...
+  try {
+    const user = await User.find({ name: new RegExp("^" + name.toLowerCase(), "i") }).populate(["author", "publisher"]); //  Esperamos a que realice una busqueda en la que coincida el texto pasado por query params para la propiedad determinada pasada dentro de un objeto, porqué tenemos que pasar un objeto, sin importar mayusc o minusc.
+    if (user?.length) {
+      res.json(user); //  Si existe el user lo mandamos en la respuesta como un json.
+    } else {
+      res.status(404).json([]); //   Si no existe el user se manda un json con un array vacio porque la respuesta en caso de haber tenido resultados hubiera sido un array y un mandamos un código 404.
+    }
+
+    // Si falla la lectura...
+  } catch (error) {
+    next(error);
+  }
+});
+
 // CRUD: CREATE
 router.post("/", async (req, res) => {
   try {
