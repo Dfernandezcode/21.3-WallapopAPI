@@ -18,11 +18,13 @@ const chatSchema = new Schema(
       ref: "Product",
       required: true,
     },
-    messages: {
-      type: mongoose.Schema.Types.Array,
-      ref: "Messages",
-      required: false,
-    },
+    messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+        required: false,
+      },
+    ],
   },
   {
     timestamps: true,
