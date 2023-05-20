@@ -1,18 +1,21 @@
 // Importamos express:
 const express = require("express");
-
 // Importamos el modelo que nos sirve tanto para importar datos como para leerlos:
 const { Product } = require("../models/Product.js");
-
 // Importamos la función que nos sirve para resetear los product:
 const { resetProducts } = require("../utils/resetProducts.js");
 
-// Importamos la función que nos sirve para resetear los autores:
+// Importamos la función que nos sirve para resetear los users:
 const { resetUsers } = require("../utils/resetUsers.js");
 
 // Importamos la función que nos sirve para resetear las relaciones entre las coleciones
 // Router propio de product suministrado por express.Router:
 const router = express.Router();
+// Importamos Multer para subir photos.
+const multer = require("multer");
+const upload = multer({ dest: "public" });
+// Import filesystem "fs"
+const fs = require("fs");
 
 // --------------------------------------------------------------------------------------------
 // --------------------------------- ENDPOINTS DE /product ---------------------------------------
@@ -126,6 +129,40 @@ router.post("/", async (req, res, next) => {
 /* Petición tipo de POST para añadir un nuevo product (añadimos al body el nuevo product con sus propiedades que tiene que cumplir con el Scheme de nuestro modelo) identificado por su id:
  const newProduct = {name: "Prueba name", pages: 255}
  fetch("http://localhost:3000/product/",{"body": JSON.stringify(newProduct),"method":"POST","headers":{"Accept":"application/json","Content-Type":"application/json"}}).then((data)=> console.log(data)) */
+
+//  Endpoint para asociar una imágen a una user:
+//  Hacemos uso del middleware que nos facilita multer para guardar la imágen en la carpeta de estáticos public.
+
+router.post("/image-upload/:id", upload.single("image"), async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const imageFile = req.file;
+    if (!imageFile) {
+      throw new Error("No image file provided");
+    }
+
+    const originalname = req.file.originalname;
+    const path = req.file.path;
+    const newPath = path + "_" + originalname;
+    fs.renameSync(path, newPath);
+    // Move the uploaded file to the desired location
+
+    // Add the image filename to the product's photos array
+    product.photos.push(imageFile.filename);
+    await product.save();
+
+    res.json(product);
+    console.log("Product modified successfully");
+  } catch (error) {
+    next(error);
+  }
+});
 
 //  ------------------------------------------------------------------------------------------
 
