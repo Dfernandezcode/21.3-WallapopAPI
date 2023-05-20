@@ -2,6 +2,7 @@ const { Product } = require("../models/Product.js");
 const { User } = require("../models/User.js");
 
 const { generateRandom } = require("../utils/generateRandom.js");
+const { getDifferentRandomUser } = require("../utils/getDifferentRandomUser.js");
 
 const productList = [
   { name: "Jersey Zara L", price: 20, description: "negro con lineas azules" },
@@ -32,7 +33,9 @@ const resetProducts = async () => {
     for (let i = 0; i < productList.length; i++) {
       const product = productList[i];
       product.owner = users[generateRandom(0, users.length - 1)]._id;
-      console.log(product.owner);
+      if (i < 2) {
+        product.buyer = getDifferentRandomUser(product.owner, users)._id;
+      }
       const document = new Product(product);
       await document.save();
     }
