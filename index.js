@@ -5,7 +5,6 @@ const { userRouter } = require("./routes/user.routes.js");
 // const { messageRouter } = require("./routes/message.routes.js");
 const { connect } = require("./db.js");
 const cors = require("cors");
-const { fileUploadRouter } = require("./routes/file-upload.routes.js");
 
 const main = async () => {
   // Conexión a la BBDD
@@ -47,7 +46,6 @@ const main = async () => {
   // app.use("/chat", chatRouter);
   // app.use("/message", messageRouter);
   app.use("/public", express.static("public")); // use to upload vids and pics to :"Public" folder.
-  app.use("/file-upload", fileUploadRouter); // use to create a function to allow upload of files.
   app.use("/", router);
 
   app.use((err, req, res, next) => {
@@ -58,7 +56,7 @@ const main = async () => {
 
     if (err?.name === "ValidationError") {
       res.status(400).json(err);
-    } else if (err.errmsg.indexof("duplicate key") !== -1) {
+    } else if (err.errmsg.indexOf("duplicate key") !== -1) {
       res.status(400).json(err);
     } else {
       res.status(500).json(err);
