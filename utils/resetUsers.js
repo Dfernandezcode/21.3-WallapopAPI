@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const { connect } = require("../db.js");
 const { User } = require("../models/User.js");
 
 const userList = [
@@ -31,31 +29,18 @@ const userList = [
   // Add more random names here
 ];
 
-const userSeed = async () => {
+const resetUsers = async () => {
   try {
-    await connect();
-    console.log("Tenemos conexión");
-
-    // Borrar datos
     await User.collection.drop();
-    console.log("Usuarios eliminados");
-
-    // Añadimos usuarios
+    console.log("Users borrados correctamente");
+    // Add
     const documents = userList.map((user) => new User(user));
-
-    // await User.insertMany(documents);
-    for (let i = 0; i < documents.length; i++) {
-      const document = documents[i];
-      await document.save();
-    }
-
-    console.log("Usuarios creados correctamente!");
+    await User.insertMany(documents);
+    console.log("Users creados correctamente!");
   } catch (error) {
     console.error("ERROR AL CONECTAR CON LA BBDD");
     console.error(error);
-  } finally {
-    mongoose.disconnect();
   }
 };
 
-userSeed();
+module.exports = { resetUsers };
