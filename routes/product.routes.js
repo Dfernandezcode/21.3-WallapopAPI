@@ -3,16 +3,21 @@ const express = require("express");
 
 // Importamos el modelo que nos sirve tanto para importar datos como para leerlos:
 const { Product } = require("../models/Product.js");
-
+const { User } = require("../models/User.js");
 // Importamos la función que nos sirve para resetear los product:
 const { resetProducts } = require("../utils/resetProducts.js");
 
-// Importamos la función que nos sirve para resetear los autores:
+// Importamos la función que nos sirve para resetear los users:
 const { resetUsers } = require("../utils/resetUsers.js");
 
 // Importamos la función que nos sirve para resetear las relaciones entre las coleciones
 // Router propio de product suministrado por express.Router:
 const router = express.Router();
+// Importamos Multer para subir photos.
+const multer = require("multer");
+const upload = multer({ dest: "public" });
+// Import filesystem "fs"
+const fs = require("fs");
 
 // --------------------------------------------------------------------------------------------
 // --------------------------------- ENDPOINTS DE /product ---------------------------------------
@@ -126,6 +131,33 @@ router.post("/", async (req, res, next) => {
 /* Petición tipo de POST para añadir un nuevo product (añadimos al body el nuevo product con sus propiedades que tiene que cumplir con el Scheme de nuestro modelo) identificado por su id:
  const newProduct = {name: "Prueba name", pages: 255}
  fetch("http://localhost:3000/product/",{"body": JSON.stringify(newProduct),"method":"POST","headers":{"Accept":"application/json","Content-Type":"application/json"}}).then((data)=> console.log(data)) */
+
+//  Endpoint para asociar una imágen a una user:
+//  Hacemos uso del middleware que nos facilita multer para guardar la imágen en la carpeta de estáticos public.
+router.post("/image-upload", upload.single("image"), async (req, res, next) => {
+  try {
+    // Renombrado de la imágen
+    const originalname = req.file.originalname;
+    const path = req.file.path;
+    const newPath = path + "_" + originalname;
+    fs.renameSync(path, newPath);
+    // Busqueda del product por id
+    const userId = req.body.userId;
+    const user = await User.findById(userId);
+    // Si hay autor asignamos la imagen al autor y guardamos
+    if (user) {
+      user.image = newPath;
+      await user.save();
+      res.json(user);
+      console.log("Autor modificado correctamente");
+    } else {
+      fs.unlinkSync(newPath);
+      res.status(404).send("Autor no encontrado");
+    }
+  } catch (error) {
+    next(error);
+  }
+});
 
 //  ------------------------------------------------------------------------------------------
 
