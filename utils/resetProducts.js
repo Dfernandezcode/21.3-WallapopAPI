@@ -1,58 +1,52 @@
-const mongoose = require("mongoose");
 const { Product } = require("../models/Product.js");
-const { connect } = require("../db.js");
+const { User } = require("../models/User.js");
 
-/*
-    - Product name
-    - Price
-    - Description
-    - Photos
-    - Buyer => User
-    - Seller => User
-*/
+const generateRandom = require("../utils/generateRandom.js");
 
 const productList = [
-  { productName: "Jersey Zara L", price: "€20", description: "negro con lineas azules" },
-  { productName: "T-Shirt Adidas M", price: "€15", description: "blanca con logo negro" },
-  { productName: "Jeans Levi's 501", price: "€50", description: "azul oscuro, estilo recto" },
-  { productName: "Sneakers Nike Air Max", price: "€100", description: "negro con suela blanca" },
-  { productName: "Dress H&M", price: "€30", description: "estampado floral, estilo camisero" },
-  { productName: "Watch Casio", price: "€50", description: "correa de acero inoxidable, color plateado" },
-  { productName: "Backpack Eastpak", price: "€40", description: "negra, con múltiples compartimentos" },
-  { productName: "Sunglasses Ray-Ban", price: "€80", description: "montura de metal dorado, lentes polarizadas" },
-  { productName: "Perfume Chanel No.5", price: "€120", description: "fragancia clásica y elegante" },
-  { productName: "Wallet Tommy Hilfiger", price: "€35", description: "cuero marrón, múltiples ranuras para tarjetas" },
-  { productName: "Earrings Swarovski", price: "€60", description: "pendientes de cristal con forma de gota" },
+  { name: "Jersey Zara L", price: "€20", description: "negro con lineas azules" },
+  { name: "T-Shirt Adidas M", price: "€15", description: "blanca con logo negro" },
+  { name: "Jeans Levi's 501", price: "€50", description: "azul oscuro, estilo recto" },
+  { name: "Sneakers Nike Air Max", price: "€100", description: "negro con suela blanca" },
+  { name: "Dress H&M", price: "€30", description: "estampado floral, estilo camisero" },
+  { name: "Watch Casio", price: "€50", description: "correa de acero inoxidable, color plateado" },
+  { name: "Backpack Eastpak", price: "€40", description: "negra, con múltiples compartimentos" },
+  { name: "Sunglasses Ray-Ban", price: "€80", description: "montura de metal dorado, lentes polarizadas" },
+  { name: "Perfume Chanel No.5", price: "€120", description: "fragancia clásica y elegante" },
+  { name: "Wallet Tommy Hilfiger", price: "€35", description: "cuero marrón, múltiples ranuras para tarjetas" },
+  { name: "Earrings Swarovski", price: "€60", description: "pendientes de cristal con forma de gota" },
 ];
 
 const productSeed = async () => {
   try {
-    await connect();
-    console.log("Tenemos conexión");
-
     // Borrar datos
     await Product.collection.drop();
     console.log("Productos eliminados");
 
+    const users = await User.find();
+    if (!users.length) {
+      console.error("No hay users en la BBDD.");
+      return;
+    }
+
+    for (let i = 0; i < productList.length; i++) {
+      const product = new Product(productList[i]);
+      product.owner = users[generateRandom(0, users.length)];
+
+      await product.save();
+    }
+
     // Añadimos Productos
     const documents = productList.map((product) => new Product(product));
-
-    // await Product.insertMany(documents);
     for (let i = 0; i < documents.length; i++) {
       const document = documents[i];
       await document.save();
     }
-
     console.log("Productos creados correctamente!");
   } catch (error) {
     console.error("ERROR AL CONECTAR CON LA BBDD");
     console.error(error);
-  } finally {
-    mongoose.disconnect();
   }
 };
 
-productSeed();
-
-// find all products.
-// for-loop productList and add random owner to every product.
+module.exports = { productSeed };
