@@ -1,9 +1,7 @@
 // Importamos express:
 const express = require("express");
-
 // Importamos el modelo que nos sirve tanto para importar datos como para leerlos:
 const { Product } = require("../models/Product.js");
-const { User } = require("../models/User.js");
 // Importamos la función que nos sirve para resetear los product:
 const { resetProducts } = require("../utils/resetProducts.js");
 
@@ -134,26 +132,33 @@ router.post("/", async (req, res, next) => {
 
 //  Endpoint para asociar una imágen a una user:
 //  Hacemos uso del middleware que nos facilita multer para guardar la imágen en la carpeta de estáticos public.
-router.post("/image-upload", upload.single("image"), async (req, res, next) => {
+
+router.post("/image-upload/:id", upload.single("image"), async (req, res, next) => {
   try {
-    // Renombrado de la imágen
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const imageFile = req.file;
+    if (!imageFile) {
+      throw new Error("No image file provided");
+    }
+
     const originalname = req.file.originalname;
     const path = req.file.path;
     const newPath = path + "_" + originalname;
     fs.renameSync(path, newPath);
-    // Busqueda del product por id
-    const productId = req.body.productId;
-    const product = await User.findById(productId);
-    // Si hay autor asignamos la imagen al autor y guardamos
-    if (product) {
-      product.photos.push(newPath);
-      await product.save();
-      res.json(product);
-      console.log("producto modificado correctamente");
-    } else {
-      fs.unlinkSync(newPath);
-      res.status(404).send("producto no encontrado");
-    }
+    // Move the uploaded file to the desired location
+
+    // Add the image filename to the product's photos array
+    product.photos.push(imageFile.filename);
+    await product.save();
+
+    res.json(product);
+    console.log("Product modified successfully");
   } catch (error) {
     next(error);
   }
