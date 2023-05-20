@@ -73,12 +73,12 @@ router.get("/:id", async (req, res, next) => {
       const includeProducts = req.query.includeProducts === "true";
 
       if (includeProducts) {
-        const books = await Product.find({ user: id }); // Busco en la entidad Car los coches que correspondena ese id de User.
-        temporalUser.books = books; // Añadimos la propiedad cars al usuario temporal con los coches que hemos recogido de la entidad Car.
+        const products = await Product.find({ owner: id });
+        temporalUser.products = products;
       }
-      res.json(temporalUser); //  Si existe el user lo mandamos como respuesta en modo json.
+      res.json(temporalUser);
     } else {
-      res.status(404).json({}); //    Si no existe el user se manda un json vacio y un código 400.
+      res.status(404).json({});
     }
 
     // Si falla la lectura...
