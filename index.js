@@ -56,7 +56,7 @@ const main = async () => {
 
     if (err?.name === "ValidationError") {
       res.status(400).json(err);
-    } else if (err.errmsg.indexof("duplicate key") !== -1) {
+    } else if (err.errmsg.indexOf("duplicate key") !== -1) {
       res.status(400).json(err);
     } else {
       res.status(500).json(err);

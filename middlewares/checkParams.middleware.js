@@ -1,5 +1,5 @@
-const { User } = require("../models/User");
-const { verifyToken } = require("../utils/token");
+// git const { User } = require("../models/User");
+// const { verifyToken } = require("../utils/token");
 
 // Middleware previo al get de autores para comprobar los parametros:
 
