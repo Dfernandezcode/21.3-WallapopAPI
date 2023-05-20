@@ -5,14 +5,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const generateToken = (id, email) => {
-  // Comprueba si han mandado authorId o authorEmail
+  // Comprueba si han mandado userId o userEmail
   if (!id || !email) {
-    throw new Error("Email or authorId missing"); // Fuerza un nuevo error y salta al catch
+    throw new Error("Email or userId missing"); // Fuerza un nuevo error y salta al catch
   }
 
   const payload = {
-    authorId: id,
-    authorEmail: email,
+    id,
+    email,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });

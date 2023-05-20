@@ -1,10 +1,5 @@
 // Importamos express:
 const express = require("express");
-const multer = require("multer");
-
-const fs = require("fs");
-
-const upload = multer({ dest: "public" });
 
 // Importamos bcrypt:
 const bcrypt = require("bcrypt");
@@ -224,38 +219,6 @@ de un user en concreto (recogemos el id de los parametros de la ruta ):
 
 fetch("http://localhost:3000/user/id del user a actualizar",{"body": JSON.stringify({country: "Prueba country"}),"method":"PUT","headers":{"Accept":"application/json","Content-Type":"application/json"}}).then((data)=> console.log(data))
 */
-
-//  ------------------------------------------------------------------------------------------
-
-//  Endpoint para asociar una imágen a una user:
-//  Hacemos uso del middleware que nos facilita multer para guardar la imágen en la carpeta de estáticos public.
-
-router.post("/image-upload", upload.single("image"), async (req, res, next) => {
-  try {
-    // Renombrado de la imágen
-    const originalname = req.file.originalname;
-    const path = req.file.path;
-    const newPath = path + "_" + originalname;
-    fs.renameSync(path, newPath);
-
-    // Busqueda del autor por id
-    const userId = req.body.userId;
-    const user = await User.findById(userId);
-
-    // Si hay autor asignamos la imagen al autor y guardamos
-    if (user) {
-      user.image = newPath;
-      await user.save();
-      res.json(user);
-      console.log("Autor modificado correctamente");
-    } else {
-      fs.unlinkSync(newPath);
-      res.status(404).send("Autor no encontrado");
-    }
-  } catch (error) {
-    next(error);
-  }
-});
 
 //  ------------------------------------------------------------------------------------------
 
