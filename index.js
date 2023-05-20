@@ -2,7 +2,7 @@ const express = require("express");
 
 const { productRouter } = require("./routes/product.routes.js");
 const { userRouter } = require("./routes/user.routes.js");
-
+const { chatRouter } = require("./routes/chat.routes.js");
 // const { chatRouter } = require("./routes/chat.routes.js");
 // const { messageRouter } = require("./routes/message.routes.js");
 const { connect } = require("./db.js");
@@ -40,7 +40,7 @@ const main = async () => {
   // Usamos las rutas
   app.use("/product", productRouter);
   app.use("/user", userRouter);
-  // app.use("/chat", chatRouter);
+  app.use("/chat", chatRouter);
   // app.use("/message", messageRouter);
   app.use("/public", express.static("public")); // use to upload vids and pics to :"Public" folder.
   app.use("/", router);
