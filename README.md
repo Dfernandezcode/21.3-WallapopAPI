@@ -47,3 +47,7 @@ Messages
     - Messages
     - Sender => User
     - Reciever => User
+
+Tareas:
+
+DaniR -seeds (function names: resetProducts, resetUsers) -routes: CRUD, products DaniF -routes: CRUD, user
