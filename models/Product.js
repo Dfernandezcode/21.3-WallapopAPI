@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 
 const productSchema = new Schema(
   {
-    name: { type: String, trim: true, minLength: [3, " Al menos tres letras para el nombre."], maxLength: [20, "Nombre demasiado largo, máximo de 20 caracteres."], required: true },
+    name: { type: String, trim: true, minLength: [3, " Al menos tres letras para el nombre."], maxLength: [50, "Nombre demasiado largo, máximo de 20 caracteres."], required: true },
     price: { type: Number, min: [0, "No puede costar menos de un 0"], required: true },
     buyer: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
