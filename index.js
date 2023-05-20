@@ -1,10 +1,14 @@
 const express = require("express");
+
 const { productRouter } = require("./routes/product.routes.js");
 const { userRouter } = require("./routes/user.routes.js");
+
 // const { chatRouter } = require("./routes/chat.routes.js");
 // const { messageRouter } = require("./routes/message.routes.js");
 const { connect } = require("./db.js");
+const { checkError } = require("./middlewares/error.middleware.js");
 const cors = require("cors");
+const { infoReq } = require("./middlewares/infoReq.middleware.js");
 
 const main = async () => {
   // Conexión a la BBDD
@@ -30,15 +34,8 @@ const main = async () => {
     res.status(404).send("Lo sentimos :( No hemos encontrado la página solicitada.");
   });
 
-  // Application Middlewares
-  app.use((req, res, next) => {
-    const date = new Date();
-    console.log(`Petición de tipo ${req.method} a la url ${req.originalUrl} el ${date}`);
-    next();
-  });
-
-  // Middleware - error management.
-  // !! NOTE: ORDER OF PARAMETERS IS KEY.
+  // Info de la req
+  app.use(infoReq);
 
   // Usamos las rutas
   app.use("/product", productRouter);
@@ -48,22 +45,7 @@ const main = async () => {
   app.use("/public", express.static("public")); // use to upload vids and pics to :"Public" folder.
   app.use("/", router);
 
-  app.use((err, req, res, next) => {
-    console.log("*** Start of Error ***");
-    console.log(`REQUEST FAILED: ${req.method} of URL ${req.originalUrl}`);
-    console.log(err);
-    console.log("*** End of error ***");
-
-    if (err?.name === "ValidationError") {
-      res.status(400).json(err);
-    } else if (err.errmsg.indexOf("duplicate key") !== -1) {
-      res.status(400).json(err);
-    } else {
-      res.status(500).json(err);
-    }
-
-    // res.status(500).send(err.stack); // stack indicates where the error occurred.
-  });
+  app.use(checkError);
 
   app.listen(PORT, () => {
     console.log(`app levantado en el puerto ${PORT}`);
