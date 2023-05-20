@@ -1,6 +1,6 @@
 {
   "name": "21.3_api-2ndhandapp",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Workshop S5 - API de app de segunda mano",
   "main": "index.js",
   "scripts": {
@@ -10,9 +10,7 @@
     "seed:users": "node ./seeds/user.seed.js",
     "seed:products": "node ./seeds/product.seed.js",
     "seed:chats": "node ./seeds/chat.seed.js",
-    "seed:messages": "node ./seeds/message.seed.js",
-    "seed:relations": "node ./seeds/relations.seed.js",
-    "seed:all": "npm run seed:users && npm run seed:products && npm run seed:chats && npm run seed:messages && npm run seed:relations",
+    "seed:all": "npm run seed:users && npm run seed:products && npm run seed:chats",
     "start:watch": "nodemon index.js",
     "start": "node index.js",
     "lint": "eslint",
