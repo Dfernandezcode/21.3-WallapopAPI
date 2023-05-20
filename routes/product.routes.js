@@ -142,17 +142,17 @@ router.post("/image-upload", upload.single("image"), async (req, res, next) => {
     const newPath = path + "_" + originalname;
     fs.renameSync(path, newPath);
     // Busqueda del product por id
-    const userId = req.body.userId;
-    const user = await User.findById(userId);
+    const productId = req.body.productId;
+    const product = await User.findById(productId);
     // Si hay autor asignamos la imagen al autor y guardamos
-    if (user) {
-      user.image = newPath;
-      await user.save();
-      res.json(user);
-      console.log("Autor modificado correctamente");
+    if (product) {
+      product.photos.push(newPath);
+      await product.save();
+      res.json(product);
+      console.log("producto modificado correctamente");
     } else {
       fs.unlinkSync(newPath);
-      res.status(404).send("Autor no encontrado");
+      res.status(404).send("producto no encontrado");
     }
   } catch (error) {
     next(error);
