@@ -1,6 +1,6 @@
 {
   "name": "21.3_api-2ndhandapp",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Workshop S5 - API de app de segunda mano",
   "main": "index.js",
   "scripts": {
