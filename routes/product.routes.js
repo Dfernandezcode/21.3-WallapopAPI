@@ -90,7 +90,7 @@ router.get("/name/:name", async (req, res, next) => {
   const name = req.params.name;
   // Si funciona la lectura...
   try {
-    const product = await Product.find({ name: new RegExp("^" + name.toLowerCase(), "i") }).populate(["author", "publisher"]); //  Esperamos a que realice una busqueda en la que coincida el texto pasado por query params para la propiedad determinada pasada dentro de un objeto, porqué tenemos que pasar un objeto, sin importar mayusc o minusc.
+    const product = await Product.find({ name: new RegExp("^" + name.toUpperCase(), "i") }).populate(["owner", "buyer"]); //  Esperamos a que realice una busqueda en la que coincida el texto pasado por query params para la propiedad determinada pasada dentro de un objeto, porqué tenemos que pasar un objeto, sin importar mayusc o minusc.
     if (product?.length) {
       res.json(product); //  Si existe el product lo mandamos en la respuesta como un json.
     } else {

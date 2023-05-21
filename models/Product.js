@@ -11,6 +11,7 @@ const productSchema = new Schema(
     name: {
       type: String,
       trim: true,
+      upperCase: true,
       minLength: [3, "Al menos tres letras para el nombre."],
       maxLength: [50, "Nombre demasiado largo, máximo de 50 caracteres."],
       required: true,

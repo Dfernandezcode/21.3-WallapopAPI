@@ -36,6 +36,7 @@ router.get("/", checkParams, async (req, res, next) => {
       .limit(limit) // La función limit se ejecuta sobre el .find() y le dice que coga un número limitado de elementos, coge desde el inicio a no ser que le añadamos...
       .skip((page - 1) * limit); // La función skip() se ejecuta sobre el .find() y se salta un número determinado de elementos y con este cálculo podemos paginar en función del limit. // Con populate le indicamos que si recoge un id en la propiedad señalada rellene con los campos de datos que contenga ese id
     //  Creamos una respuesta más completa con info de la API y los datos solicitados por el user:
+
     const totalElements = await User.countDocuments(); //  Esperamos aque realice el conteo del número total de elementos con modelo.countDocuments()
     const totalPagesByLimit = Math.ceil(totalElements / limit); // Para saber el número total de páginas que se generan en función del limit. Math.ceil() nos elimina los decimales.
 
@@ -99,11 +100,11 @@ router.get("/name/:name", async (req, res, next) => {
   // Si funciona la lectura...
   try {
     // const user = await user.find({ firstName: name }); //Si quisieramos realizar una busqueda exacta, tal y como está escrito.
-    const user = await User.find({ name: new RegExp("^" + userName.toLowerCase(), "i") }); // Devolvemos los books si funciona. Con modelo.find().
+    const user = await User.find({ name: new RegExp("^" + userName.toUpperCase(), "i") }); // Devolvemos los books si funciona. Con modelo.find().
 
     //  Esperamos a que realice una busqueda en la que coincida el texto pasado por query params para la propiedad determinada pasada dentro de un objeto, porqué tenemos que pasar un objeto, sin importar mayusc o minusc.
-    if (user?.length) {
-      res.json(user); //  Si existe el user lo mandamos en la respuesta como un json.
+    if (user) {
+      res.json(user);
     } else {
       res.status(404).json([]); //   Si no existe el user se manda un json con un array vacio porque la respuesta en caso de haber tenido resultados hubiera sido un array y un mandamos un código 404.
     }
@@ -124,8 +125,10 @@ router.get("/name/:name", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   // Si funciona la escritura...
   try {
-    const user = new User(req.body); //     Un nuevo user es un nuevo modelo de la BBDD que tiene un Scheme que valida la estructura de esos datos que recoge del body de la petición.
-    const createdUser = await user.save(); // Esperamos a que guarde el nuevo user creado en caso de que vaya bien. Con el metodo .save().
+    const user = req.body;
+    user.name = user.name.toUpperCase(); //     Un nuevo user es un nuevo modelo de la BBDD que tiene un Scheme que valida la estructura de esos datos que recoge del body de la petición.
+    const document = new User(user);
+    const createdUser = await document.save(); // Esperamos a que guarde el nuevo user creado en caso de que vaya bien. Con el metodo .save().
     return res.status(201).json(createdUser); // Devolvemos un código 201 que significa que algo se ha creado y el user creado en modo json.
 
     // Si falla la escritura...
