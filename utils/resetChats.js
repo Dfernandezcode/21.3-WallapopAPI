@@ -5,6 +5,9 @@ const { Product } = require("../models/Product.js");
 
 const resetChats = async () => {
   try {
+    await Chat.collection.drop();
+    console.log("Chats eliminados");
+
     const products = await Product.find({ buyer: { $exists: true } }).limit(2);
     if (!products.length) {
       console.error("No hay productos en la BBDD.");
