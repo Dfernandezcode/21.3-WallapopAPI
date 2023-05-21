@@ -1,0 +1,718 @@
+{
+	"info": {
+		"_postman_id": "8194fe3f-a8db-4450-a8a4-6b723cdcb25c",
+		"name": "App de Segunda Mano",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26678393",
+		"_collection_link": "https://lunar-shadow-598419.postman.co/workspace/My-Workspace~bb2fabbe-669e-40aa-85ab-0d5b9d85e36d/collection/26678393-8194fe3f-a8db-4450-a8a4-6b723cdcb25c?action=share&creator=26678393&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get product by name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/product/name/Jersey",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"name",
+								"Jersey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get product by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/product/64689f5426fcdc0523a62a55",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"64689f5426fcdc0523a62a55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/product?Page=1&Limit=6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "Limit",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product by Id User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjkwNjQ4ZjBhYTFjNWIyZjg2M2I1OSIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2MTA1MTMsImV4cCI6MTY4NDY5NjkxM30.5iNSFCJUjyNZfT0YnJbrK2cyesjsXZScR6n0e3ZqGp8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"raton logitech\",\r\n    \"price\": 50,\r\n    \"description\": \"raton G-tech blanco\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/product/64690648f0aa1c5b2f863b59",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"64690648f0aa1c5b2f863b59"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Photo to  Product by Id",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE1MDlmNjNmYzU5ZjNiODhmOWRjMyIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2ODkyNzAsImV4cCI6MTY4NDc3NTY3MH0.FYIW9a-pbL_Nyu_wTLPKeCcqpONzdKEESP_dgFD5K90",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/danie/Downloads/borjes.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/product/image-upload/646a509f63fc59f3b88f9dcd",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"image-upload",
+								"646a509f63fc59f3b88f9dcd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE1MDlmNjNmYzU5ZjNiODhmOWRjMyIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2ODkyNzAsImV4cCI6MTY4NDc3NTY3MH0.FYIW9a-pbL_Nyu_wTLPKeCcqpONzdKEESP_dgFD5K90",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Prueba Update\"\r\n\r\n    }"
+						},
+						"url": {
+							"raw": "{{base_url}}/product/646a509f63fc59f3b88f9dd7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"646a509f63fc59f3b88f9dd7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete products by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE1MDlmNjNmYzU5ZjNiODhmOWRjMyIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2ODkyNzAsImV4cCI6MTY4NDc3NTY3MH0.FYIW9a-pbL_Nyu_wTLPKeCcqpONzdKEESP_dgFD5K90",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/product/646a509f63fc59f3b88f9dcd",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"646a509f63fc59f3b88f9dcd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset products",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/product/reset?all=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"product",
+								"reset"
+							],
+							"query": [
+								{
+									"key": "all",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Get Chat by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/chat/646a5c20395b1217aaca40a9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat",
+								"646a5c20395b1217aaca40a9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Chats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/chat?Page=1&Limit=6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							],
+							"query": [
+								{
+									"key": "Page",
+									"value": "1"
+								},
+								{
+									"key": "Limit",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new Chat by Id Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE4MmVmNzg4ZDRjNDFhNDIwZTU1YyIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJpYXQiOjE2ODQ3MDQwNDMsImV4cCI6MTY4NDc5MDQ0M30._o53qJ-pRIrh3ZWPjE6B12WPkRsjKUUUmythoR-hHDM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\":\"646a82f0788d4c41a420e567\",\r\n    \"newMessage\": \"Mensaje de prueba\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/chat/646a82ef788d4c41a420e55c",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat",
+								"646a82ef788d4c41a420e55c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new Message to Chat",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE4MmVmNzg4ZDRjNDFhNDIwZTU1YyIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJpYXQiOjE2ODQ3MDQwNDMsImV4cCI6MTY4NDc5MDQ0M30._o53qJ-pRIrh3ZWPjE6B12WPkRsjKUUUmythoR-hHDM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newMessage\": \"raton logitech\"\r\n    }"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat/646a86dbad9b9f506e14cfcf",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat",
+								"646a86dbad9b9f506e14cfcf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Chats by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmE4MmVmNzg4ZDRjNDFhNDIwZTU1YyIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJpYXQiOjE2ODQ3MDIwNjEsImV4cCI6MTY4NDc4ODQ2MX0.8JLlayfSb1NRYIgfJoEPgZ03eNWr6k-pyWTBi1Yn0-w",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/chat/646a82f0788d4c41a420e592",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat",
+								"646a82f0788d4c41a420e592"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Chats",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/chat/reset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/646a82ef788d4c41a420e55c?includeProducts=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"646a82ef788d4c41a420e55c"
+							],
+							"query": [
+								{
+									"key": "includeProducts",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/name/JOHN DOE?includeProducts=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"name",
+								"JOHN DOE"
+							],
+							"query": [
+								{
+									"key": "includeProducts",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Prueba Nombre\",\r\n    \"password\": \"111111111\",\r\n    \"email\": \"prueba@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjhmYWU0NGIyMTVmZGFiMzdhNDZhZCIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2MDE2NDAsImV4cCI6MTY4NDY4ODA0MH0.eatkkdOiZ26hfdTOouMqPvweIcK7Q1_Y8Qv8kWaKJ88",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Prueba Update\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/6468fae44b215fdaa37a46ad",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"6468fae44b215fdaa37a46ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjhmYWU0NGIyMTVmZGFhMzdhNDZhZCIsImVtYWlsIjoiUm9uYWxkb0BnbWFpbC5jb20iLCJpYXQiOjE2ODQ2MDE2NDAsImV4cCI6MTY4NDY4ODA0MH0.eatkkdOiZ26hfdTOouMqPvweIcK7Q1_Y8Qv8kWaKJ88",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user/6468fae44b215fdaa37a46ad",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"6468fae44b215fdaa37a46ad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/user/reset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {   \"email\": \"johndoe@gmail.com\",\r\n        \"password\": \"password1\"\r\n    }    ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}",
+					"host": [
+						"{{base_url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
