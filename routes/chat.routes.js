@@ -1,119 +1,177 @@
-// Importamos express:
 const express = require("express");
-// Importamos el modelo que nos sirve tanto para importar datos como para leerlos:
+
 const { Chat } = require("../models/Chat.js");
-// const { User } = require("../models/User.js");
-// Importamos la función que nos sirve para resetear los chat:
-const { resetChats } = require("../utils/resetChats.js");
-// middleware
+const { Message } = require("../models/Message.js");
+const { Product } = require("../models/Product.js");
+
 const { checkParams } = require("../middlewares/checkParams.middleware");
-const { isAuth } = require("../middlewares/auth.middleware");
-// Router propio de chat suministrado por express.Router:
+const { isAuthForChats } = require("../middlewares/authChats.middleware");
+const { isAuth } = require("../middlewares/auth.middleware.js");
+
+const { resetChats } = require("../utils/resetChats.js");
+
 const router = express.Router();
-// Importamos Multer.
-// const multer = require("multer");
-// Import filesystem "fs"
-// const fs = require("fs");
 
 // --------------------------------------------------------------------------------------------
 // --------------------------------- ENDPOINTS DE /chat ---------------------------------------
 // --------------------------------------------------------------------------------------------
+
+/*  Endpoint para recuperar todos los users de manera paginada en función de un limite de elementos a mostrar
+por página para no saturar al navegador (CRUD: READ):
+*/
+
 router.get("/", checkParams, async (req, res, next) => {
-  // Si funciona la lectura...
   try {
-    const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
-
-    // if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
-    //   return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    // }
-
     const { page, limit } = req.query;
-    const chats = await Chat.find(id)
-      .populate(["messages"]) // Devolvemos los chats si funciona. Con modelo.find().
-      .limit(limit) // La función limit se ejecuta sobre el .find() y le dice que coga un número limitado de elementos, coge desde el inicio a no ser que le añadamos...
-      .skip((page - 1) * limit); // La función skip() se ejecuta sobre el .find() y se salta un número determinado de elementos y con este cálculo podemos paginar en función del limit. // Con populate le indicamos que si recoge un id en la propiedad señalada rellene con los campos de datos que contenga ese id
-    //  Creamos una respuesta más completa con info de la API y los datos solicitados por el chat:
-    const totalElements = await Chat.countDocuments(); //  Esperamos aque realice el conteo del número total de elementos con modelo.countDocuments()
-    const totalPagesByLimit = Math.ceil(totalElements / limit); // Para saber el número total de páginas que se generan en función del limit. Math.ceil() nos elimina los decimales.
 
-    // Respuesta Completa:
+    const chats = await Chat.find()
+      .populate(["messages", "seller", "buyer", "product"])
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    const totalElements = await Chat.countDocuments();
+    const totalPagesByLimit = Math.ceil(totalElements / limit);
+
     const response = {
       totalItems: totalElements,
       totalPages: totalPagesByLimit,
       currentPage: page,
       data: chats,
     };
-    // Enviamos la respuesta como un json.
+
     res.json(response);
-
-    // Si falla la lectura...
   } catch (error) {
     next(error);
   }
 });
 
-// post de chats
-router.post("/", isAuth, async (req, res, next) => {
+//  ------------------------------------------------------------------------------------------
+
+//  Endpoint para recuperar un chat en concreto a través de su id ( modelo.findById()) (CRUD: READ):
+
+router.get("/:id", async (req, res, next) => {
   try {
-    const { senderId, recipientId, message, product } = req.body;
-
-    console.log("req.body:", req.body);
-    console.log("product:", product);
-
-    // Validate the required fields
-    if (!senderId || !recipientId || !message || !product) {
-      return res.status(400).json({ error: "Required fields are missing" });
+    const idChat = req.params.id;
+    const chat = await Chat.findById(idChat).populate(["messages", "seller", "buyer", "product"]);
+    if (chat) {
+      res.json(chat);
+    } else {
+      res.status(404).json({});
     }
-
-    // Get the seller information
-    const seller = product.owner._id;
-
-    // Create a new chat
-    const chat = new Chat({ senderId, recipientId, message, product, seller });
-    const createdChat = await chat.save();
-
-    res.status(201).json(createdChat);
   } catch (error) {
     next(error);
   }
 });
 
-// reset de chats.
+// Ejemplo de REQ:
+// http://localhost:3000/chat/id del chat a buscar
+
+//  ------------------------------------------------------------------------------------------
+
+//  Endpoint para añadir elementos (CRUD: CREATE):
+
+router.post("/:id", isAuth, async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
+    const product = await Product.findById(productId);
+
+    if (product) {
+      const seller = product.owner;
+      const buyer = req.user.id;
+
+      const message = {
+        date: new Date(),
+        message: req.body.newMessage,
+        sender: buyer,
+        reciever: seller,
+      };
+
+      const newMessage = new Message(message);
+      await newMessage.save();
+      const messages = [newMessage.id];
+
+      const chat = {
+        product,
+        seller,
+        buyer,
+        messages,
+      };
+
+      const document = new Chat(chat);
+      await document.save();
+      res.status(201).json(document);
+    } else {
+      res.status(404).json({});
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+//  ------------------------------------------------------------------------------------------
+
+//  Endpoint para resetear los datos de chat:
+
 router.delete("/reset", async (req, res, next) => {
   try {
-    // La constante all recoge un boleano, si recogemos una query (all) y con valor (true), esta será true:
-    const all = req.query.all === "true";
-
-    // Si all es true resetearemos todos los datos de nuestras coleciones y las relaciones entre estas.
-    if (all) {
-      await resetChats();
-      res.send("Datos reseteados y Relaciones reestablecidas");
-    } else {
-      await resetChats();
-      res.send("Chat reseteados");
-    }
-    // Si falla el reseteo...
+    await resetChats();
+    res.send("Datos reseteados y Relaciones reestablecidas");
   } catch (error) {
     next(error);
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
-  // Si funciona el borrado...
+//  ------------------------------------------------------------------------------------------
+
+//  Endpoint para eliminar chat identificado por id (CRUD: DELETE):
+
+router.delete("/:id", isAuthForChats, async (req, res, next) => {
   try {
-    const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
+    const chat = req.chat;
 
-    // if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
-    //   return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    // }
-    const chatDeleted = await Chat.findByIdAndDelete(id); // Esperamos a que nos devuelve la info del chat eliminado que busca y elimina con el metodo findByIdAndDelete(id del chat a eliminar).
+    const chatDeleted = await Chat.findByIdAndDelete(chat.id).populate(["buyer", "seller", "messages"]);
+
     if (chatDeleted) {
-      res.json(chatDeleted); //  Devolvemos el chat eliminado en caso de que exista con ese id.
+      res.json(chatDeleted);
     } else {
-      res.status(404).json({}); //  Devolvemos un código 404 y un objeto vacio en caso de que no exista con ese id.
+      res.status(404).json({});
     }
+  } catch (error) {
+    next(error);
+  }
+});
 
-    // Si falla el borrado...
+//  ------------------------------------------------------------------------------------------
+
+//  Endpoint para actualizar un elemento añadiendo un nuevo mensaje al chat identificado por id pasando antes por el middleware de auntetificación (CRUD: UPDATE):
+
+router.put("/:id", isAuthForChats, async (req, res, next) => {
+  try {
+    const chat = req.chat;
+    const user = req.user;
+
+    const reciever = user.id === chat.seller.id ? chat.buyer.id : chat.seller.id;
+
+    const newMessage = {
+      date: new Date(),
+      sender: user,
+      reciever,
+      message: req.body.newMessage,
+    };
+
+    const document = new Message(newMessage);
+    await document.save();
+    chat.messages.push(document.id);
+
+    const chatToUpdate = await Chat.findById(chat.id).populate(["buyer", "seller", "messages"]);
+
+    if (chatToUpdate) {
+      Object.assign(chatToUpdate, chat);
+      await chatToUpdate.save();
+      res.json(chatToUpdate);
+    } else {
+      res.status(404).json({});
+    }
   } catch (error) {
     next(error);
   }

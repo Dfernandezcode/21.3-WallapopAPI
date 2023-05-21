@@ -140,6 +140,7 @@ router.post("/", async (req, res, next) => {
 /* Petición tipo de POST para añadir un nuevo user (añadimos al body el nuevo user con sus propiedades que tiene que cumplir con el Scheme de nuestro modelo) identificado por su id:
  const newUser = {name: "Prueba Nombre", country: "Prueba country"}
  fetch("http://localhost:3000/user/",{"body": JSON.stringify(newUser),"method":"POST","headers":{"Accept":"application/json","Content-Type":"application/json"}}).then((data)=> console.log(data)) */
+
 //  ------------------------------------------------------------------------------------------
 
 //  Endpoint para resetear los datos de user:
