@@ -2,27 +2,27 @@ const { User } = require("../models/User.js");
 
 const userList = [
   {
-    name: "Ronaldo",
+    name: "RONALDO",
     email: "Ronaldo@gmail.com",
     password: "password0",
   },
   {
-    name: "John Doe",
+    name: "JOHN DOE",
     email: "johndoe@gmail.com",
     password: "password1",
   },
   {
-    name: "Jane Smith",
+    name: "JANE SMITH",
     email: "janesmith@gmail.com",
     password: "password2",
   },
   {
-    name: "Michael Johnson",
+    name: "MICKEL JOHNSON",
     email: "michaeljohnson@gmail.com",
     password: "password3",
   },
   {
-    name: "Emily Davis",
+    name: "EMILY DAVIS",
     email: "emilydavis@gmail.com",
     password: "password4",
   },

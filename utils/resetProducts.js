@@ -32,6 +32,7 @@ const resetProducts = async () => {
 
     for (let i = 0; i < productList.length; i++) {
       const product = productList[i];
+      product.name = product.name.toUpperCase();
       product.owner = users[generateRandom(0, users.length - 1)]._id;
       if (i < 2) {
         product.buyer = getDifferentRandomUser(product.owner, users)._id;

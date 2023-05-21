@@ -29,7 +29,7 @@ const userSchema = new Schema(
       select: false, // Indica que no lo deseamos mostrar cuando se realicen las peticiones.
       required: true,
     },
-    name: { type: String, trim: true, minLength: [3, "Al menos tres letras para el nombre"], maxLength: [22, "Nombre demasiado largo, máximo de 22 caracteres"], required: true },
+    name: { type: String, trim: true, upperCase: true, minLength: [3, "Al menos tres letras para el nombre"], maxLength: [22, "Nombre demasiado largo, máximo de 22 caracteres"], required: true },
   },
   { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
 );
