@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const chatSchema = new Schema(
   {
-    buyer: {
+    sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: false,
     },
-    seller: {
+    recipient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

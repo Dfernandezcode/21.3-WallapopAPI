@@ -19,7 +19,7 @@ const isAuth = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json(error);
+    return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
   }
 };
 
