@@ -9,6 +9,8 @@ const { resetUsers } = require("../utils/resetUsers.js");
 const { resetChats } = require("../utils/resetChats.js");
 
 const { isAuth } = require("../middlewares/auth.middleware");
+const { checkParams } = require("../middlewares/checkParams.middleware");
+const { isAuthForProducts } = require("../middlewares/authProducts.middleware.js");
 
 const router = express.Router();
 
@@ -22,12 +24,10 @@ const upload = multer({ dest: "public" });
 por página para no saturar al navegador (CRUD: READ):
 */
 
-router.get("/", async (req, res, next) => {
+router.get("/", checkParams, async (req, res, next) => {
   // Si funciona la lectura...
   try {
-    // Recogemos las query params de esta manera req.query.parametro.
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const { page, limit } = req.query;
 
     const products = await Product.find() // Devolvemos los products si funciona. Con modelo.find().
       .populate(["owner", "buyer"])
@@ -110,7 +110,7 @@ router.get("/name/:name", async (req, res, next) => {
 
 //  Endpoint para añadir elementos (CRUD: CREATE):
 
-router.post("/", isAuth, async (req, res, next) => {
+router.post("/:id", isAuth, async (req, res, next) => {
   // Si funciona la escritura...
   try {
     const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
@@ -118,8 +118,11 @@ router.post("/", isAuth, async (req, res, next) => {
     if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
       return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
     }
-    const product = new Product(req.body); //     Un nuevo product es un nuevo modelo de la BBDD que tiene un Scheme que valida la estructura de esos datos que recoge del body de la petición.
-    const createdProduct = await product.save(); // Esperamos a que guarde el nuevo product creado en caso de que vaya bien. Con el metodo .save().
+    const product = req.body;
+    product.owner = id;
+    const document = new Product(product);
+
+    const createdProduct = await document.save(); // Esperamos a que guarde el nuevo product creado en caso de que vaya bien. Con el metodo .save().
     return res.status(201).json(createdProduct); // Devolvemos un código 201 que significa que algo se ha creado y el product creado en modo json.
 
     // Si falla la escritura...
@@ -135,19 +138,9 @@ router.post("/", isAuth, async (req, res, next) => {
 //  Endpoint para asociar una imágen a una user:
 //  Hacemos uso del middleware que nos facilita multer para guardar la imágen en la carpeta de estáticos public.
 
-router.post("/image-upload/:id", isAuth, upload.single("image"), async (req, res, next) => {
+router.post("/image-upload/:id", isAuthForProducts, upload.single("image"), async (req, res, next) => {
   try {
-    const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
-
-    if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
-      return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    }
-    const productId = req.params.id;
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      throw new Error("Product not found");
-    }
+    const product = req.product;
 
     const imageFile = req.file;
     if (!imageFile) {
@@ -158,9 +151,7 @@ router.post("/image-upload/:id", isAuth, upload.single("image"), async (req, res
     const path = req.file.path;
     const newPath = path + "_" + originalname;
     fs.renameSync(path, newPath);
-    // Move the uploaded file to the desired location
 
-    // Add the image filename to the product's photos array
     product.photos.push(imageFile.filename);
     await product.save();
 
@@ -200,22 +191,17 @@ router.delete("/reset", async (req, res, next) => {
 
 //  Endpoint para eliminar product identificado por id (CRUD: DELETE):
 
-router.delete("/:id", isAuth, async (req, res, next) => {
-  // Si funciona el borrado...
+router.delete("/:id", isAuthForProducts, async (req, res, next) => {
   try {
-    const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
+    const product = req.product;
 
-    if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
-      return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    }
-    const productDeleted = await Product.findByIdAndDelete(id); // Esperamos a que nos devuelve la info del product eliminado que busca y elimina con el metodo findByIdAndDelete(id del product a eliminar).
+    const productDeleted = await Product.findByIdAndDelete(product.id);
+
     if (productDeleted) {
-      res.json(productDeleted); //  Devolvemos el product eliminado en caso de que exista con ese id.
+      res.json(productDeleted);
     } else {
-      res.status(404).json({}); //  Devolvemos un código 404 y un objeto vacio en caso de que no exista con ese id.
+      res.status(404).json({});
     }
-
-    // Si falla el borrado...
   } catch (error) {
     next(error);
   }
@@ -230,16 +216,12 @@ fetch("http://localhost:3000/product/id del product a borrar",{"method":"DELETE"
 
 //  Endpoint para actualizar un elemento identificado por id (CRUD: UPDATE):
 
-router.put("/:id", isAuth, async (req, res, next) => {
+router.put("/:id", isAuthForProducts, async (req, res, next) => {
   // Si funciona la actualización...
   try {
-    const id = req.params.id; //  Recogemos el id de los parametros de la ruta.
+    const product = req.product;
 
-    if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
-      return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
-    }
-
-    const productUpdated = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true }); // Esperamos que devuelva la info del product actualizado al que tambien hemos pasado un objeto con los campos q tiene que acualizar en la req del body de la petición. {new: true} Le dice que nos mande el product actualizado no el antiguo. Lo busca y elimina con el metodo findByIdAndDelete(id del product a eliminar).
+    const productUpdated = await Product.findByIdAndUpdate(product.id, req.body, { new: true, runValidators: true }); // Esperamos que devuelva la info del product actualizado al que tambien hemos pasado un objeto con los campos q tiene que acualizar en la req del body de la petición. {new: true} Le dice que nos mande el product actualizado no el antiguo. Lo busca y elimina con el metodo findByIdAndDelete(id del product a eliminar).
     if (productUpdated) {
       res.json(productUpdated); //  Devolvemos el product actualizado en caso de que exista con ese id.
     } else {
