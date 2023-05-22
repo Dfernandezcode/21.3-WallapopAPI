@@ -9,7 +9,6 @@ const isAuth = async (req, res, next) => {
       throw new Error({ error: "No tienes autorización para realizar esta operación" });
     }
 
-    // Descodificamos el token
     const decodedInfo = verifyToken(token);
     const user = await User.findOne({ email: decodedInfo.email }).select("+password");
     if (!user) {

@@ -1,22 +1,15 @@
-// Importamos express:
 const express = require("express");
-
-// Importamos bcrypt:
 const bcrypt = require("bcrypt");
 
-const { generateToken } = require("../utils/token");
+const { User } = require("../models/User.js");
+const { Product } = require("../models/Product.js");
 
 const { isAuth } = require("../middlewares/auth.middleware");
 const { checkParams } = require("../middlewares/checkParams.middleware");
 
-// Importamos el modelo que nos sirve tanto para importar datos como para leerlos:
-const { User } = require("../models/User.js");
-const { Product } = require("../models/Product.js");
-
-// Importamos la función que nos sirve para resetear los user:
+const { generateToken } = require("../utils/token");
 const { resetUsers } = require("../utils/resetUsers.js");
 
-// Router propio de user:
 const router = express.Router();
 
 // --------------------------------------------------------------------------------------------

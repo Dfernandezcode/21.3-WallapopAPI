@@ -1,13 +1,9 @@
-//  Importamos Mongoose
 const mongoose = require("mongoose");
 
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 
-// Declaramos nuestro esquema que nos permite declarar nuestros objetos y crearle restricciones.
 const Schema = mongoose.Schema;
-
-// Creamos esquema del user:
 
 const userSchema = new Schema(
   {
@@ -50,8 +46,6 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-// Creamos un modelo para que siempre que creamos un user valide contra el Schema que hemos creado para ver si es valido.
 const User = mongoose.model("User", userSchema);
 
-//  Exportamos el modelo para poder usarlo fuera.
 module.exports = { User };
