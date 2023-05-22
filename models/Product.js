@@ -1,11 +1,7 @@
-//  Importamos Mongoose
-// Importamos Mongoose
 const mongoose = require("mongoose");
 
-// Declaramos nuestro esquema que nos permite declarar nuestros objetos y crearle restricciones.
 const Schema = mongoose.Schema;
 
-// Creamos el esquema del producto:
 const productSchema = new Schema(
   {
     name: {
@@ -41,11 +37,9 @@ const productSchema = new Schema(
       required: false,
     },
   },
-  { timestamps: true } // Cada vez que se modifique un documento refleja la hora y fecha de modificación
+  { timestamps: true }
 );
 
-// Creamos un modelo para que siempre que creamos un producto valide contra el esquema que hemos creado para ver si es válido.
 const Product = mongoose.model("Product", productSchema);
 
-// Exportamos el modelo para poder usarlo fuera.
 module.exports = { Product };

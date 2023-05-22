@@ -1,8 +1,3 @@
-// git const { User } = require("../models/User");
-// const { verifyToken } = require("../utils/token");
-
-// Middleware previo al get de autores para comprobar los parametros:
-
 const checkParams = async (req, res, next) => {
   try {
     console.log("Estamos en el Middleware que comprueba los parámetros");

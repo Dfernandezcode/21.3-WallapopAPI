@@ -1,9 +1,9 @@
+const mongoose = require("mongoose");
+
 // Cargamos variables de entorno
 require("dotenv").config();
 const DB_CONNECTION = process.env.DB_URL;
 const DB_NAME = process.env.DB_NAME;
-
-const mongoose = require("mongoose");
 
 // Configuración de la conexión
 const config = {
